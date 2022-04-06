@@ -33,6 +33,9 @@ def load_model(model_type, field, device):
     elif model_type == 'DistillBertEmotion':
         model = Transformers.DistillBertEmotion()
 
+    elif model_type == 'RoBERTa':
+        model = Transformers.RoBERTa()
+        
     else:
         model = None
     model.to(device)
