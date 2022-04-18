@@ -1,0 +1,50 @@
+---
+output: html_document
+---
+
+This is another implementation of an LDA in R, using the stm package.
+
+```{r}
+library(stm)
+library(tm)
+```
+
+```{r}
+df <- read.csv("../../data/original_datasets/covid_hate.csv")
+# remove Tweet.ID and label columns in the dataframe
+df <- df[, !(names(df) %in% c("Tweet.ID", "label"))]
+```
+
+```{r}
+df <- as.data.frame(t(df))
+```
+
+```{r}
+processed <- textProcessor(df, stem = FALSE)
+out <- prepDocuments(processed$documents, processed$vocab, processed$meta)
+docs <- out$documents
+vocab <- out$vocab
+meta <- out$meta
+```
+
+
+```{r}
+prev_fit <- stm(
+    docs,
+    vocab,
+    K = 10,
+    max.em.its = 1000,
+    data = meta,
+    init.type = "Spectral"
+)
+```
+
+
+```{r}
+plot(prev_fit, type = "summary", xlim = c(0, 0.3))
+```
+
+
+```{r}
+labelTopics(prev_fit, c(6, 10, 5))
+```
